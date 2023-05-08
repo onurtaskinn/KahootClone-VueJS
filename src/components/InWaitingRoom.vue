@@ -69,7 +69,8 @@
       const checkGameStatus = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:8001/api/games/${gamePublicId.value}/`,
+            //`http://localhost:8001/api/games/${gamePublicId.value}/`,
+            `https://my-third-assignment.onrender.com/api/games/${gamePublicId.value}/`,
           );
           console.log(response.data.state)
           if (response.data.state === "ANSWER") {
