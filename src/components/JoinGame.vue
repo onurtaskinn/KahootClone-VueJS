@@ -19,6 +19,7 @@
 
 <script>
 import axios from "axios";
+const djangoUrl = import.meta.env.VITE_DJANGOURL; //   ${djangoUrl}
 
 export default {
   data() {
@@ -30,9 +31,10 @@ export default {
   methods: {
     async submitForm() {
       try {
+        console.log("Django URL:", djangoUrl); // Add this line to log the value of djangoUrl
+
         const response = await axios.post(
-          // "http://localhost:8001/api/participants/",
-          "https://my-third-assignment.onrender.com/api/participants/",
+          `${djangoUrl}/api/participants/`,
           {
             alias: this.alias,
             game: this.gamePublicId,

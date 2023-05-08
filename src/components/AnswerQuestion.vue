@@ -32,193 +32,6 @@
 </template>
 
 
-
-
-
-
-
-<!-- <script>
-import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import axios from 'axios';
-
-export default {
-  setup() {
-    const router = useRouter();
-    const gamePublicId = ref(sessionStorage.getItem("gamePublicId"));
-    const uuidp = ref(sessionStorage.getItem("uuidP"));
-
-    const gameData = ref(null);
-    const selectedAnswer = ref(null);
-    const countdown = ref(null);
-
-    const onCountdownFinished = async () => {
-      await fetchGameData();
-    };
-
-    const startCountdown = (time) => {
-      countdown.value = time;
-      console.log(" in start countdown : ", time);
-
-      const interval = setInterval(() => {
-        countdown.value--;
-
-        if (countdown.value <= 0) {
-          clearInterval(interval);
-          onCountdownFinished();
-        }
-      }, 1100);
-    };
-
-    const selectAnswer = (index) => {
-      selectedAnswer.value = index;
-      submitAnswer();
-    };
-
-    const submitAnswer = async () => {
-      console.log("Selected answer ID:", selectedAnswer.value);
-      console.log("publicId:", gameData.value.publicId);
-
-      const data = {
-        game: gameData.value.publicId,
-        uuidp: uuidp.value,
-        answer: selectedAnswer.value,
-      };
-
-      try {
-        const response = await axios.post("https://my-third-assignment.onrender.com/api/guess/" , data);
-        console.log("Guess saved successfully:", response.data);
-        const correct = response.data.correct;
-        sessionStorage.setItem("correct", correct);
-
-        sessionStorage.setItem("previousQuestion", gameData.value.current_question.question);
-        const correctAnswer = gameData.value.current_question.current_answers.find(answer => answer.correct).answer;
-        sessionStorage.setItem("previousAnswer", correctAnswer);
-        sessionStorage.setItem("guessedAnswer", gameData.value.current_question.current_answers[selectedAnswer.value].answer);
-      } catch (error) {
-        console.error("Error saving the guess:", error.response.data);
-      }
-    };
-
-    const fetchGameData = async () => {
-      try {
-        const response = await axios.get(`https://my-third-assignment.onrender.com/api/games/${gamePublicId.value}/`);
-        gameData.value = response.data;
-
-        if (gameData.value.state !== "QUESTION") {
-          if (gameData.value.current_question) {
-            startCountdown(gameData.value.current_question.answerTime);
-          } else {
-            router.push({ name: "InWaitingRoom" });
-          }
-        } else {
-          router.push({ name: "InWaitingRoom" });
-        }
-      } catch (error) {
-        console.error("Error fetching game data:", error);
-      }
-    };
-
-    onMounted(async () => {
-      await fetchGameData();
-      if (gameData.value && gameData.value.current_question) {
-        startCountdown(gameData.value.current_question.answerTime);
-      }
-    });
-
-    return {
-      gameData,
-      selectedAnswer,
-      submitAnswer,
-      countdown,
-      selectAnswer,
-    };
-  },
-};
-</script> -->
-
-
-
-<!-- <script>
-import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
-import axios from 'axios';
-
-export default {
-  setup() {
-    const router = useRouter();
-    const gamePublicId = ref(sessionStorage.getItem("gamePublicId"));
-    const uuidp = ref(sessionStorage.getItem("uuidP"));
-
-    const gameData = ref(null);
-    const selectedAnswer = ref(null);
-    const countdown = ref(null);
-
-    const onCountdownFinished = async () => {
-      await fetchGameData();
-    };
-
-    const startCountdown = (time) => {
-      countdown.value = time;
-      console.log(" in start countdown : ", time);
-
-      const interval = setInterval(() => {
-        countdown.value--;
-
-        if (countdown.value <= 0) {
-          clearInterval(interval);
-          onCountdownFinished();
-        }
-      }, 1100);
-    };
-
-    const selectAnswer = (index) => {
-      selectedAnswer.value = index;
-      submitAnswer();
-    };
-
-    
-
-    const fetchGameData = async () => {
-      try {
-        const response = await axios.get(`https://my-third-assignment.onrender.com/api/games/${gamePublicId.value}/`);
-        gameData.value = response.data;
-
-        if (gameData.value.state !== "QUESTION") {
-          if (gameData.value.current_question) {
-            startCountdown(gameData.value.current_question.answerTime);
-          } else {
-            router.push({ name: "InWaitingRoom" });
-          }
-        } else {
-          router.push({ name: "InWaitingRoom" });
-        }
-      } catch (error) {
-        console.error("Error fetching game data:", error);
-      }
-    };
-
-    onMounted(() => {
-      startCountdown(10); // Set the initial countdown value (e.g., 10 seconds)
-    });
-
-    return {
-      gameData,
-      selectedAnswer,
-      submitAnswer,
-      countdown,
-      selectAnswer,
-    };
-  },
-};
-</script> -->
-
-
-
-
-
-
-
 <script>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
@@ -226,6 +39,8 @@ import axios from 'axios';
 
 export default {
   setup() {
+    const djangoUrl = import.meta.env.VITE_DJANGOURL; //   ${djangoUrl}
+
     const router = useRouter();
     const gamePublicId = ref(sessionStorage.getItem("gamePublicId"));
     const uuidp = ref(sessionStorage.getItem("uuidP"));
@@ -246,7 +61,7 @@ export default {
 
           const checkGameState = async () => {
             const response = await axios.get(
-              `https://my-third-assignment.onrender.com/api/games/${gamePublicId.value}/`
+              `${djangoUrl}/api/games/${gamePublicId.value}/`
             );
             if (response.data.state !== "ANSWER") {
               router.push({ name: "InWaitingRoom" });
@@ -262,7 +77,7 @@ export default {
 
     const fetchGameData = async () => {
       try {
-        const response = await axios.get(`https://my-third-assignment.onrender.com/api/games/${gamePublicId.value}/`);
+        const response = await axios.get(`${djangoUrl}/api/games/${gamePublicId.value}/`);
         gameData.value = response.data;
         startCountdown()
       } catch (error) {
@@ -287,7 +102,7 @@ export default {
       };
 
       try {
-        const response = await axios.post("https://my-third-assignment.onrender.com/api/guess/" , data);
+        const response = await axios.post(`${djangoUrl}/api/guess/` , data);
         console.log("Guess saved successfully:", response.data);
         const correct = response.data.correct;
         sessionStorage.setItem("correct", correct);

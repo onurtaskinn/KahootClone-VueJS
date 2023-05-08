@@ -129,6 +129,8 @@ tr:nth-child(odd) {
   
   export default {
     setup() {
+      const djangoUrl = import.meta.env.VITE_DJANGOURL; //   ${djangoUrl}
+
       const route = useRoute();
       const gamePublicId = ref(sessionStorage.getItem("gamePublicId"));
       const uuidp = ref(sessionStorage.getItem("uuidP"));
@@ -141,7 +143,7 @@ tr:nth-child(odd) {
       const fetchParticipants = async () => {
         try {
           console.log(gamePublicId)
-          const response = await axios.get(`https://my-third-assignment.onrender.com/api/game-participants/${gamePublicId.value}/`); //http://localhost:8001/api
+          const response = await axios.get(`${djangoUrl}/api/game-participants/${gamePublicId.value}/`); 
           participants.value = response.data.sort((a, b) => b.points - a.points);
           maxPoints.value = participants.value[0]?.points || 0; // Set maxPoints to the points of the first participant or 0 if no participants
         } catch (error) {

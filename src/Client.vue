@@ -22,7 +22,8 @@
   <script setup>
   import { computed } from 'vue';
   import { useRoute } from 'vue-router';
-  
+
+
   const route = useRoute();
   const showHeader = computed(() => route.path === '/' );
   const containerClass = computed(() => (showHeader.value ? 'container' : 'container-no-header'));
