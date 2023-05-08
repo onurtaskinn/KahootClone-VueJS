@@ -34,6 +34,191 @@
 
 
 
+
+
+
+<!-- <script>
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import axios from 'axios';
+
+export default {
+  setup() {
+    const router = useRouter();
+    const gamePublicId = ref(sessionStorage.getItem("gamePublicId"));
+    const uuidp = ref(sessionStorage.getItem("uuidP"));
+
+    const gameData = ref(null);
+    const selectedAnswer = ref(null);
+    const countdown = ref(null);
+
+    const onCountdownFinished = async () => {
+      await fetchGameData();
+    };
+
+    const startCountdown = (time) => {
+      countdown.value = time;
+      console.log(" in start countdown : ", time);
+
+      const interval = setInterval(() => {
+        countdown.value--;
+
+        if (countdown.value <= 0) {
+          clearInterval(interval);
+          onCountdownFinished();
+        }
+      }, 1100);
+    };
+
+    const selectAnswer = (index) => {
+      selectedAnswer.value = index;
+      submitAnswer();
+    };
+
+    const submitAnswer = async () => {
+      console.log("Selected answer ID:", selectedAnswer.value);
+      console.log("publicId:", gameData.value.publicId);
+
+      const data = {
+        game: gameData.value.publicId,
+        uuidp: uuidp.value,
+        answer: selectedAnswer.value,
+      };
+
+      try {
+        const response = await axios.post("https://my-third-assignment.onrender.com/api/guess/" , data);
+        console.log("Guess saved successfully:", response.data);
+        const correct = response.data.correct;
+        sessionStorage.setItem("correct", correct);
+
+        sessionStorage.setItem("previousQuestion", gameData.value.current_question.question);
+        const correctAnswer = gameData.value.current_question.current_answers.find(answer => answer.correct).answer;
+        sessionStorage.setItem("previousAnswer", correctAnswer);
+        sessionStorage.setItem("guessedAnswer", gameData.value.current_question.current_answers[selectedAnswer.value].answer);
+      } catch (error) {
+        console.error("Error saving the guess:", error.response.data);
+      }
+    };
+
+    const fetchGameData = async () => {
+      try {
+        const response = await axios.get(`https://my-third-assignment.onrender.com/api/games/${gamePublicId.value}/`);
+        gameData.value = response.data;
+
+        if (gameData.value.state !== "QUESTION") {
+          if (gameData.value.current_question) {
+            startCountdown(gameData.value.current_question.answerTime);
+          } else {
+            router.push({ name: "InWaitingRoom" });
+          }
+        } else {
+          router.push({ name: "InWaitingRoom" });
+        }
+      } catch (error) {
+        console.error("Error fetching game data:", error);
+      }
+    };
+
+    onMounted(async () => {
+      await fetchGameData();
+      if (gameData.value && gameData.value.current_question) {
+        startCountdown(gameData.value.current_question.answerTime);
+      }
+    });
+
+    return {
+      gameData,
+      selectedAnswer,
+      submitAnswer,
+      countdown,
+      selectAnswer,
+    };
+  },
+};
+</script> -->
+
+
+
+<!-- <script>
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import axios from 'axios';
+
+export default {
+  setup() {
+    const router = useRouter();
+    const gamePublicId = ref(sessionStorage.getItem("gamePublicId"));
+    const uuidp = ref(sessionStorage.getItem("uuidP"));
+
+    const gameData = ref(null);
+    const selectedAnswer = ref(null);
+    const countdown = ref(null);
+
+    const onCountdownFinished = async () => {
+      await fetchGameData();
+    };
+
+    const startCountdown = (time) => {
+      countdown.value = time;
+      console.log(" in start countdown : ", time);
+
+      const interval = setInterval(() => {
+        countdown.value--;
+
+        if (countdown.value <= 0) {
+          clearInterval(interval);
+          onCountdownFinished();
+        }
+      }, 1100);
+    };
+
+    const selectAnswer = (index) => {
+      selectedAnswer.value = index;
+      submitAnswer();
+    };
+
+    
+
+    const fetchGameData = async () => {
+      try {
+        const response = await axios.get(`https://my-third-assignment.onrender.com/api/games/${gamePublicId.value}/`);
+        gameData.value = response.data;
+
+        if (gameData.value.state !== "QUESTION") {
+          if (gameData.value.current_question) {
+            startCountdown(gameData.value.current_question.answerTime);
+          } else {
+            router.push({ name: "InWaitingRoom" });
+          }
+        } else {
+          router.push({ name: "InWaitingRoom" });
+        }
+      } catch (error) {
+        console.error("Error fetching game data:", error);
+      }
+    };
+
+    onMounted(() => {
+      startCountdown(10); // Set the initial countdown value (e.g., 10 seconds)
+    });
+
+    return {
+      gameData,
+      selectedAnswer,
+      submitAnswer,
+      countdown,
+      selectAnswer,
+    };
+  },
+};
+</script> -->
+
+
+
+
+
+
+
 <script>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
@@ -48,9 +233,53 @@ export default {
     const gameData = ref(null);
     const selectedAnswer = ref(null);
     const countdown = ref(null);
-    let last_question = false;
 
-    console.log("last_question",last_question)
+    const onCountdownFinished = () => {
+      if (gameData.value.total_questions !== gameData.value.questionNo) {
+        router.push({ name: "InWaitingRoom" });
+      } else {
+        sessionStorage.setItem("gamePublicId", gamePublicId.value);
+        sessionStorage.setItem("uuidP", uuidp.value);
+        router.push({ name: "Leaderboard" });
+      }
+    };
+
+
+    const startCountdown = () => {
+      countdown.value = gameData.value.current_question.answerTime;
+      console.log("in start countdown:", gameData.value.current_question.answerTime);
+
+      const interval = setInterval(() => {
+        countdown.value--;
+
+        if (countdown.value <= 0) {
+          clearInterval(interval);
+
+          const checkGameState = async () => {
+            const response = await axios.get(
+              `https://my-third-assignment.onrender.com/api/games/${gamePublicId.value}/`
+            );
+            if (response.data.state !== "ANSWER") {
+              onCountdownFinished();
+            } else {
+              setTimeout(checkGameState, 1000); // Check again after 1 second
+            }
+          };
+
+          checkGameState();
+        }
+      }, 1000);
+    };
+
+    const fetchGameData = async () => {
+      try {
+        const response = await axios.get(`https://my-third-assignment.onrender.com/api/games/${gamePublicId.value}/`);
+        gameData.value = response.data;
+        startCountdown()
+      } catch (error) {
+        console.error("Error fetching game data:", error);
+      }
+    };
 
 
     const selectAnswer = (index) => {
@@ -68,63 +297,26 @@ export default {
         answer: selectedAnswer.value,
       };
 
-
-
       try {
-      const response = await axios.post("https://my-third-assignment.onrender.com/api/guess/" , data); //"http://127.0.0.1:8001/api/guess/"
-      console.log("Guess saved successfully:", response.data);
-      const correct = response.data.correct; // Access the uuidP value
-      sessionStorage.setItem("correct", correct);
-      console.log(correct);
-
-      // Save the previous question and answer into sessionStorage
-      sessionStorage.setItem("previousQuestion", gameData.value.current_question.question);
-      const correctAnswer = gameData.value.current_question.current_answers.find(answer => answer.correct).answer;
-      sessionStorage.setItem("previousAnswer", correctAnswer);
-      sessionStorage.setItem("guessedAnswer", gameData.value.current_question.current_answers[selectedAnswer.value].answer);
-    } catch (error) {
-      console.error("Error saving the guess:", error.response.data);
-    }
-    };
-
-
-    const startCountdown = () => {
-      countdown.value = gameData.value.current_question.answerTime;
-      console.log(" in start countdown : ",gameData.value.current_question.answerTime)
-      const interval = setInterval(() => {
-        countdown.value--;
-
-        if (countdown.value <= 0) {
-          clearInterval(interval);
-        }
-      }, 1000);
-    };
-
-    const fetchGameData = async () => {
-      try {
-        const response = await axios.get(`https://my-third-assignment.onrender.com/api/games/${gamePublicId.value}/`); //`http://localhost:8001/api/games/${gamePublicId.value}/
-        gameData.value = response.data;
-
-        if (gameData.value.state !== "QUESTION") {
-          if (gameData.value.current_question) {
-            setTimeout(fetchGameData, gameData.value.current_question.answerTime * 1000);
-            sessionStorage.setItem("last_question", false);
-            startCountdown();
-          } else {
-            last_question = true
-            sessionStorage.setItem("last_question", true);
-            router.push({ name: "InWaitingRoom" });
-          }
-        } else {
-          router.push({ name: "InWaitingRoom" });
-        }
+        const response = await axios.post("https://my-third-assignment.onrender.com/api/guess/" , data);
+        console.log("Guess saved successfully:", response.data);
+        const correct = response.data.correct;
+        sessionStorage.setItem("correct", correct);
+        sessionStorage.setItem("previousQuestion", gameData.value.current_question.question);
+        const correctAnswer = gameData.value.current_question.current_answers.find(answer => answer.correct).answer;
+        sessionStorage.setItem("previousAnswer", correctAnswer);
+        sessionStorage.setItem("guessedAnswer", gameData.value.current_question.current_answers[selectedAnswer.value].answer);
       } catch (error) {
-        console.error("Error fetching game data:", error);
+        console.error("Error saving the guess:", error.response.data);
       }
     };
+
+
+
     onMounted(() => {
       fetchGameData();
     });
+
     return {
       gameData,
       selectedAnswer,

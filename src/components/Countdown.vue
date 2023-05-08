@@ -30,7 +30,7 @@ export default {
         } else {
           counter.value--;
         }
-      }, 1000);
+      }, 1100);
     };
 
     onMounted(() => {
