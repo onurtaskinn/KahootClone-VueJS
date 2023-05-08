@@ -1,11 +1,11 @@
 import { createApp } from "vue";
 // import App from "./App.vue";
-import Client from "./Client.vue";
+import VueClient from "./VueClient.vue";
 import router from "./router";
 
 import "./assets/main.css";
 
-const app = createApp(Client);
+const app = createApp(VueClient);
 
 app.use(router);
 

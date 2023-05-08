@@ -1,138 +1,152 @@
 <template>
-    <div class="main-container">
-      <audio ref="correctAnswerAudio" src="/static/Correct-answer.mp3" preload="auto"></audio>
-      <div class="waiting-container">
-        <div v-if="previousQuestion && previousAnswer" class="previous-container">
-          <div class="current-score-container">
-            <h2 class="section-title">Your Current Score</h2>
-            <div class="current-score">
-              <p>{{ currentScore }}</p>
-            </div>
+  <div class="main-container">
+    <audio
+      ref="correctAnswerAudio"
+      src="/static/Correct-answer.mp3"
+      preload="auto"
+    ></audio>
+    <div class="waiting-container">
+      <div v-if="previousQuestion && previousAnswer" class="previous-container">
+        <div class="current-score-container">
+          <h2 class="section-title">Your Current Score</h2>
+          <div class="current-score">
+            <p>{{ currentScore }}</p>
+          </div>
           <h2 class="section-title">Previous Question</h2>
-          </div>
-          <div class="previous-question">
-            <p>{{ previousQuestion }}</p>
-          </div>
-          <h2 class="section-title">Correct Answer</h2>
-          <div class="previous-answer" :class="{ 'correct-answer': correct === 'true', 'incorrect-answer': correct === 'false' }">
-            <p>{{ previousAnswer }}</p>
-          </div>
-          <h3 v-if="correct === 'true'" class="success-message">Your answer is correct!!</h3>
-          <div v-if="correct === 'false'" class="guessed-answer" :class="{ 'incorrect-answer': correct === 'false' }">
-            <h2 class="section-title">Your Answer</h2>
-            <p>{{ guessedAnswer }}</p>
-          </div>
+        </div>
+        <div class="previous-question">
+          <p>{{ previousQuestion }}</p>
+        </div>
+        <h2 class="section-title">Correct Answer</h2>
+        <div
+          class="previous-answer"
+          :class="{
+            'correct-answer': correct === 'true',
+            'incorrect-answer': correct === 'false',
+          }"
+        >
+          <p>{{ previousAnswer }}</p>
+        </div>
+        <h3 v-if="correct === 'true'" class="success-message">
+          Your answer is correct!!
+        </h3>
+        <div
+          v-if="correct === 'false'"
+          class="guessed-answer"
+          :class="{ 'incorrect-answer': correct === 'false' }"
+        >
+          <h2 class="section-title">Your Answer</h2>
+          <p>{{ guessedAnswer }}</p>
         </div>
       </div>
     </div>
-  </template>
+  </div>
+</template>
 
-  <script>
-  import axios from "axios";
-  import { useRouter } from "vue-router";
-  import { ref, onMounted, onUnmounted } from "vue";
-  
-  export default {
-    setup() {
-      const djangoUrl = import.meta.env.VITE_DJANGOURL; //   ${djangoUrl}
-      const router = useRouter();
+<script>
+import axios from "axios";
+import { useRouter } from "vue-router";
+import { ref, onMounted, onUnmounted } from "vue";
 
-      const gamePublicId = ref(sessionStorage.getItem("gamePublicId"));
-      const uuidp = ref(sessionStorage.getItem("uuidP"));
-      const correct = ref(sessionStorage.getItem("correct"));
-      const last_question = ref(sessionStorage.getItem("last_question"));
+export default {
+  setup() {
+    const djangoUrl = import.meta.env.VITE_DJANGOURL; //   ${djangoUrl}
+    const router = useRouter();
 
-      const participants = ref([]);
-      const previousQuestion = ref(sessionStorage.getItem("previousQuestion"));
-      const previousAnswer = ref(sessionStorage.getItem("previousAnswer"));
-      const guessedAnswer = ref(sessionStorage.getItem("guessedAnswer"));
+    const gamePublicId = ref(sessionStorage.getItem("gamePublicId"));
+    const uuidp = ref(sessionStorage.getItem("uuidP"));
+    const correct = ref(sessionStorage.getItem("correct"));
+    const last_question = ref(sessionStorage.getItem("last_question"));
 
-      const correctAnswerAudio = ref(null);
-      const currentScore = ref(0);
+    const participants = ref([]);
+    const previousQuestion = ref(sessionStorage.getItem("previousQuestion"));
+    const previousAnswer = ref(sessionStorage.getItem("previousAnswer"));
+    const guessedAnswer = ref(sessionStorage.getItem("guessedAnswer"));
 
+    const correctAnswerAudio = ref(null);
+    const currentScore = ref(0);
 
-      
-      console.log("last question : xx",last_question.value)
-      console.log(correct.value)
+    console.log("last question : xx", last_question.value);
+    console.log(correct.value);
 
-      const playSound = () => {
-      if (correctAnswerAudio.value && correct.value ==='true') {
+    const playSound = () => {
+      if (correctAnswerAudio.value && correct.value === "true") {
         correctAnswerAudio.value.play();
       }
-      };
+    };
 
-  
-      if (!gamePublicId.value || !uuidp.value) {
-        router.push({ name: "Home" });
+    if (!gamePublicId.value || !uuidp.value) {
+      router.push({ name: "Home" });
+    }
+
+    const fetchParticipants = async () => {
+      try {
+        const response = await axios.get(
+          `${djangoUrl}/api/game-participants/${gamePublicId.value}/`
+        );
+        participants.value = response.data;
+        const currentParticipant = participants.value.find(
+          (participant) => participant.uuidP === uuidp.value
+        );
+        console.log("outside");
+        if (currentParticipant) {
+          console.log("inside");
+          currentScore.value = currentParticipant.points;
+        }
+      } catch (error) {
+        console.error("Error fetching participants:", error);
       }
-  
-      const fetchParticipants = async () => {
-        try {
-          const response = await axios.get(`${djangoUrl}/api/game-participants/${gamePublicId.value}/`); 
-          participants.value = response.data;
-          const currentParticipant = participants.value.find(participant => participant.uuidP === uuidp.value);
-          console.log("outside")
-          if (currentParticipant) {
-            console.log("inside")
-             currentScore.value = currentParticipant.points;
-          }
+    };
 
-        } catch (error) {
-          console.error("Error fetching participants:", error);
-        }
-      };
-  
-      onMounted(() => {
+    onMounted(() => {
+      fetchParticipants();
+
+      const intervalId = setInterval(() => {
         fetchParticipants();
-  
-        const intervalId = setInterval(() => {
-          fetchParticipants();
-        }, 4000);
-  
-        onUnmounted(() => {
-          clearInterval(intervalId);
-        });
-        playSound();
+      }, 4000);
+
+      onUnmounted(() => {
+        clearInterval(intervalId);
       });
-  
-      const checkGameStatus = async () => {
-        try {
-          const response = await axios.get(
-            `${djangoUrl}/api/games/${gamePublicId.value}/`,
-          );
-          console.log(response.data.state)
-          if (response.data.state === "ANSWER") {
-            router.push({ name: "AnswerQuestion" });
-            console.log("to leaderboard")
-            console.log("last question : yy",last_question.value)
-            console.log(response.data.state)
-          }
-          else if( response.data.state === "FINISHED" ){
-            router.push({ name: "Leaderboard" });
-          }
-          else {
-            setTimeout(() => checkGameStatus(), 2000);
-          }
-        } catch (error) {
-          console.error("Error fetching game status:", error);
+      playSound();
+    });
+
+    const checkGameStatus = async () => {
+      try {
+        const response = await axios.get(
+          `${djangoUrl}/api/games/${gamePublicId.value}/`
+        );
+        console.log(response.data.state);
+        if (response.data.state === "ANSWER") {
+          router.push({ name: "AnswerQuestion" });
+          console.log("to leaderboard");
+          console.log("last question : yy", last_question.value);
+          console.log(response.data.state);
+        } else if (response.data.state === "FINISHED") {
+          router.push({ name: "Leaderboard" });
+        } else {
+          setTimeout(() => checkGameStatus(), 2000);
         }
-      };
-  
-      checkGameStatus();
-  
-      return {
-        correctAnswerAudio,
-        participants,
-        previousQuestion,
-        previousAnswer,
-        guessedAnswer,
-        correct,
-        currentScore,
-      };
-    },
-  };
-  </script>
-  
+      } catch (error) {
+        console.error("Error fetching game status:", error);
+      }
+    };
+
+    checkGameStatus();
+
+    return {
+      correctAnswerAudio,
+      participants,
+      previousQuestion,
+      previousAnswer,
+      guessedAnswer,
+      correct,
+      currentScore,
+    };
+  },
+};
+</script>
+
 <style scoped>
 .main-container {
   display: flex;
@@ -157,8 +171,8 @@
   padding-bottom: 0.25rem;
   color: black;
 }
-.previous-question{
-    color: black;
+.previous-question {
+  color: black;
 }
 .previous-container .previous-question,
 .previous-container .previous-answer,
@@ -187,7 +201,7 @@
   color: #f44336;
 }
 
-.current-score{
+.current-score {
   text-align: center;
   color: black;
 }

@@ -2,19 +2,18 @@
   <div class="app-container">
     <div class="header">
       <header class="fixed-title">
-      <h1 class="title">KahootClone</h1>
-      <nav class="nav-links">
-        <router-link to="/create">Create Quiz</router-link>
-        <router-link to="/join">Join Quiz</router-link>
-        <router-link to="/leaderboard">Leaderboard</router-link>
-      </nav>
-    </header>
+        <h1 class="title">KahootClone</h1>
+        <nav class="nav-links">
+          <router-link to="/create">Create Quiz</router-link>
+          <router-link to="/join">Join Quiz</router-link>
+          <router-link to="/leaderboard">Leaderboard</router-link>
+        </nav>
+      </header>
     </div>
     <div class="app">
       <main>
         <div class="content-wrapper">
-          <router-view>
-          </router-view>
+          <router-view> </router-view>
         </div>
       </main>
     </div>
@@ -36,16 +35,13 @@ body {
 
 .header {
   flex: 1;
-  background-color: rgb(14, 195, 186) ;
+  background-color: rgb(14, 195, 186);
 }
-
 
 .app {
   flex: 4;
-  background-color: rgb(229, 19, 26) ;
+  background-color: rgb(229, 19, 26);
 }
-
-
 
 .fixed-title {
   transform: translateX(-50%);
@@ -57,9 +53,9 @@ body {
 .title {
   font-size: 2rem;
   font-weight: 700;
-  margin-top: 0 !important; 
-  margin-bottom: 0.5rem; 
-  color: white; 
+  margin-top: 0 !important;
+  margin-bottom: 0.5rem;
+  color: white;
 }
 
 .nav-links {
@@ -74,7 +70,7 @@ body {
   margin: 0 1rem;
   font-size: 1.1rem;
   font-weight: 1;
-  white-space: nowrap; 
+  white-space: nowrap;
 }
 
 .content-wrapper {
@@ -84,7 +80,7 @@ body {
   flex: 1;
   width: 1200px;
   padding-top: 4rem;
-  padding-bottom: 4rem; 
+  padding-bottom: 4rem;
   bottom: 0;
   left: 0;
   padding-bottom: 2rem;

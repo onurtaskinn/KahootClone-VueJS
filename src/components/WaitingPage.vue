@@ -5,7 +5,7 @@
       <div class="participants">
         <h3>Participants</h3>
         <ul>
-          <li v-for="(participant) in participants" :key="participant.id">
+          <li v-for="participant in participants" :key="participant.id">
             {{ participant.alias }}
           </li>
         </ul>
@@ -33,7 +33,9 @@ export default {
 
     const fetchParticipants = async () => {
       try {
-        const response = await axios.get(`${djangoUrl}/api/game-participants/${gamePublicId.value}/`); //http://localhost:8001/api/game-participants/${gamePublicId.value}/
+        const response = await axios.get(
+          `${djangoUrl}/api/game-participants/${gamePublicId.value}/`
+        ); //http://localhost:8001/api/game-participants/${gamePublicId.value}/
         participants.value = response.data;
       } catch (error) {
         console.error("Error fetching participants:", error);
@@ -55,7 +57,7 @@ export default {
     const checkGameStatus = async () => {
       try {
         const response = await axios.get(
-          `${djangoUrl}/api/games/${gamePublicId.value}/`, //`http://localhost:8001/api/games/${gamePublicId.value}/`
+          `${djangoUrl}/api/games/${gamePublicId.value}/` //`http://localhost:8001/api/games/${gamePublicId.value}/`
         );
 
         if (response.data.state === "QUESTION") {
@@ -80,7 +82,6 @@ export default {
 </script>
 
 <style scoped>
-
 .main-container {
   display: flex;
   align-items: center;
@@ -114,16 +115,18 @@ h2 {
 .participants {
   text-align: center;
   margin-top: 1rem;
-  height: calc(100% - 3.5rem); /* Set the height of the participants container */
+  height: calc(
+    100% - 3.5rem
+  ); /* Set the height of the participants container */
   overflow-y: auto; /* Add scroll when the list overflows */
 }
 
 .participants h3 {
   margin-bottom: 1rem;
   font-weight: bolder;
-  text-underline-offset:inherit;
+  text-underline-offset: inherit;
   text-decoration: underline;
-  font-size:.65cm;
+  font-size: 0.65cm;
 
   color: rgb(0, 0, 0);
 }
@@ -143,7 +146,7 @@ h2 {
 
 .participants::-webkit-scrollbar {
   width: 8px;
-  background-color: #F5F5F5;
+  background-color: #f5f5f5;
 }
 
 .participants::-webkit-scrollbar-thumb {
@@ -153,7 +156,6 @@ h2 {
 
 .participants::-webkit-scrollbar-track {
   border-radius: 10px;
-  background-color: #F5F5F5;
+  background-color: #f5f5f5;
 }
-
 </style>

@@ -33,13 +33,10 @@ export default {
       try {
         console.log("Django URL:", djangoUrl); // Add this line to log the value of djangoUrl
 
-        const response = await axios.post(
-          `${djangoUrl}/api/participants/`,
-          {
-            alias: this.alias,
-            game: this.gamePublicId,
-          }
-        );
+        const response = await axios.post(`${djangoUrl}/api/participants/`, {
+          alias: this.alias,
+          game: this.gamePublicId,
+        });
 
         if (response.status === 201) {
           const uuidP = response.data.uuidP; // Access the uuidP value
@@ -54,7 +51,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .main-container {
@@ -77,7 +73,7 @@ export default {
 .join-game-container h2 {
   font-size: 2rem;
   font-weight: bold;
-  color:#3571d8;
+  color: #3571d8;
   margin-bottom: 1.5rem;
   text-align: center;
 }

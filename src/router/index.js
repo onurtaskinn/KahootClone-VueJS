@@ -1,16 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import JoinGame from "@/components/JoinGame.vue";
-import Waiting from "@/components/Waiting.vue";
+import Waiting from "@/components/WaitingPage.vue";
 import AnswerQuestion from "@/components/AnswerQuestion.vue";
-import Countdown from "@/components/Countdown.vue";
+import Countdown from "@/components/CountDown.vue";
 import InWaitingRoom from "@/components/InWaitingRoom.vue";
-import Leaderboard from "@/components/Leaderboard.vue";
-import Home from "@/components/Home.vue";
-
-
-
-
+import Leaderboard from "@/components/LeaderBoard.vue";
+import Home from "@/components/HomePage.vue";
 
 const routes = [
   {

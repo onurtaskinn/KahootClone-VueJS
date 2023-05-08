@@ -1,7 +1,10 @@
 <template>
   <div class="answer-question-container">
     <div class="question-wrapper">
-      <p v-if="gameData && gameData.current_question">Question {{ gameData.questionNo }}: {{ gameData.current_question.question }}</p>
+      <p v-if="gameData && gameData.current_question">
+        Question {{ gameData.questionNo }}:
+        {{ gameData.current_question.question }}
+      </p>
     </div>
     <form class="answer-form">
       <div class="grid-container" v-if="gameData && gameData.current_question">
@@ -31,11 +34,10 @@
   </div>
 </template>
 
-
 <script>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   setup() {
@@ -51,7 +53,10 @@ export default {
 
     const startCountdown = () => {
       countdown.value = gameData.value.current_question.answerTime;
-      console.log("in start countdown:", gameData.value.current_question.answerTime);
+      console.log(
+        "in start countdown:",
+        gameData.value.current_question.answerTime
+      );
 
       const interval = setInterval(() => {
         countdown.value--;
@@ -77,14 +82,15 @@ export default {
 
     const fetchGameData = async () => {
       try {
-        const response = await axios.get(`${djangoUrl}/api/games/${gamePublicId.value}/`);
+        const response = await axios.get(
+          `${djangoUrl}/api/games/${gamePublicId.value}/`
+        );
         gameData.value = response.data;
-        startCountdown()
+        startCountdown();
       } catch (error) {
         console.error("Error fetching game data:", error);
       }
     };
-
 
     const selectAnswer = (index) => {
       selectedAnswer.value = index;
@@ -102,20 +108,28 @@ export default {
       };
 
       try {
-        const response = await axios.post(`${djangoUrl}/api/guess/` , data);
+        const response = await axios.post(`${djangoUrl}/api/guess/`, data);
         console.log("Guess saved successfully:", response.data);
         const correct = response.data.correct;
         sessionStorage.setItem("correct", correct);
-        sessionStorage.setItem("previousQuestion", gameData.value.current_question.question);
-        const correctAnswer = gameData.value.current_question.current_answers.find(answer => answer.correct).answer;
+        sessionStorage.setItem(
+          "previousQuestion",
+          gameData.value.current_question.question
+        );
+        const correctAnswer =
+          gameData.value.current_question.current_answers.find(
+            (answer) => answer.correct
+          ).answer;
         sessionStorage.setItem("previousAnswer", correctAnswer);
-        sessionStorage.setItem("guessedAnswer", gameData.value.current_question.current_answers[selectedAnswer.value].answer);
+        sessionStorage.setItem(
+          "guessedAnswer",
+          gameData.value.current_question.current_answers[selectedAnswer.value]
+            .answer
+        );
       } catch (error) {
         console.error("Error saving the guess:", error.response.data);
       }
     };
-
-
 
     onMounted(() => {
       fetchGameData();
@@ -131,8 +145,6 @@ export default {
   },
 };
 </script>
-
-
 
 <style scoped>
 .answer-question-container {
@@ -228,15 +240,11 @@ input[type="radio"]:checked + label {
   transition: font-weight 0.2s, text-shadow 0.2s;
 }
 
-
 .grid-item:hover .answer-content label {
   /* font-weight: bold; */
   text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
-
 </style>
-
-
 
 <!-- //   const interval = setInterval(() => {
   //     countdown.value--;
@@ -255,9 +263,7 @@ input[type="radio"]:checked + label {
   //   }, 1000);
   // }; -->
 
-
-
-  <!-- // try {
+<!-- // try {
     //   const response = await axios.post("http://127.0.0.1:8001/api/guess/", data);
     //   console.log("Guess saved successfully:", response.data);
     //   const correct = response.data.correct; // Access the uuidP value
@@ -267,9 +273,7 @@ input[type="radio"]:checked + label {
     //   console.error("Error saving the guess:", error.response.data);
     // } -->
 
-
-
-    <!-- 
+<!-- 
 <script>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";

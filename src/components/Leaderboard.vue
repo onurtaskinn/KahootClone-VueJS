@@ -29,7 +29,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(participant, index) in participants" :key="participant.id">
+          <tr
+            v-for="(participant, index) in participants"
+            :key="participant.id"
+          >
             <td>{{ index + 1 }}</td>
             <td>{{ participant.alias }}</td>
             <td>{{ participant.points }}</td>
@@ -45,7 +48,7 @@
   max-width: 800px;
   margin: 0 auto;
 }
-.container h2{
+.container h2 {
   color: rgb(0, 43, 172);
   text-align: center;
 }
@@ -117,50 +120,42 @@ tr:nth-child(odd) {
 }
 </style>
 
-
-
-
-
-
 <script>
-  import { ref, onMounted } from "vue";
-  import { useRoute } from "vue-router";
-  import axios from "axios";
-  
-  export default {
-    setup() {
-      const djangoUrl = import.meta.env.VITE_DJANGOURL; //   ${djangoUrl}
+import { ref, onMounted } from "vue";
+import axios from "axios";
 
-      const route = useRoute();
-      const gamePublicId = ref(sessionStorage.getItem("gamePublicId"));
-      const uuidp = ref(sessionStorage.getItem("uuidP"));
-  
-      const participants = ref([]);
-      const maxPoints = ref(0);
-      const podiumColors = ["#F6BC44", "#E5E5E5", "#B57B33"]; // Gold, Silver, Bronze
+export default {
+  setup() {
+    const djangoUrl = import.meta.env.VITE_DJANGOURL; //   ${djangoUrl}
 
+    const gamePublicId = ref(sessionStorage.getItem("gamePublicId"));
 
-      const fetchParticipants = async () => {
-        try {
-          console.log(gamePublicId)
-          const response = await axios.get(`${djangoUrl}/api/game-participants/${gamePublicId.value}/`); 
-          participants.value = response.data.sort((a, b) => b.points - a.points);
-          maxPoints.value = participants.value[0]?.points || 0; // Set maxPoints to the points of the first participant or 0 if no participants
-        } catch (error) {
-          console.error("Error fetching participants:", error);
-        }
-      };
-  
-      onMounted(() => {
-        fetchParticipants();
-      });
-  
-      return {
-        participants,
-        maxPoints,
-        podiumColors,
-      };
-    },
-  };
-  </script>
-  
+    const participants = ref([]);
+    const maxPoints = ref(0);
+    const podiumColors = ["#F6BC44", "#E5E5E5", "#B57B33"]; // Gold, Silver, Bronze
+
+    const fetchParticipants = async () => {
+      try {
+        console.log(gamePublicId);
+        const response = await axios.get(
+          `${djangoUrl}/api/game-participants/${gamePublicId.value}/`
+        );
+        participants.value = response.data.sort((a, b) => b.points - a.points);
+        maxPoints.value = participants.value[0]?.points || 0; // Set maxPoints to the points of the first participant or 0 if no participants
+      } catch (error) {
+        console.error("Error fetching participants:", error);
+      }
+    };
+
+    onMounted(() => {
+      fetchParticipants();
+    });
+
+    return {
+      participants,
+      maxPoints,
+      podiumColors,
+    };
+  },
+};
+</script>

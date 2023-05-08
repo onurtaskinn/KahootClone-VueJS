@@ -2,7 +2,9 @@
   <div class="main-container">
     <div class="countdown-container">
       <h2>Get ready to answer the question!</h2>
-      <p><span class="counter">{{ counter }}</span></p>
+      <p>
+        <span class="counter">{{ counter }}</span>
+      </p>
     </div>
   </div>
 </template>
@@ -46,9 +48,7 @@ export default {
 };
 </script>
 
-
 <style scoped>
-
 .main-container {
   /* justify-content: center; */
   display: flex;
@@ -70,8 +70,8 @@ export default {
 h2 {
   margin-bottom: 1.5rem;
   color: #3571d8;
-  font-weight:400 ;
-  font-family:fantasy;
+  font-weight: 400;
+  font-family: fantasy;
 }
 
 p {
