@@ -71,7 +71,7 @@ export default {
 
 
       try {
-      const response = await axios.post("http://127.0.0.1:8001/api/guess/", data);
+      const response = await axios.post("https://my-third-assignment.onrender.com/api/guess/" , data); //"http://127.0.0.1:8001/api/guess/"
       console.log("Guess saved successfully:", response.data);
       const correct = response.data.correct; // Access the uuidP value
       sessionStorage.setItem("correct", correct);
@@ -102,7 +102,7 @@ export default {
 
     const fetchGameData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8001/api/games/${gamePublicId.value}/`);
+        const response = await axios.get(`https://my-third-assignment.onrender.com/api/games/${gamePublicId.value}/`); //`http://localhost:8001/api/games/${gamePublicId.value}/
         gameData.value = response.data;
 
         if (gameData.value.state !== "QUESTION") {

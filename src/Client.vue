@@ -6,9 +6,7 @@
             <header class="fixed-title">
               <h1 class="title">KahootClone</h1>
               <nav class="nav-links">
-                <!-- <router-link to="/create">Create Quiz</router-link> -->
                 <router-link to="/join">Join Quiz</router-link>
-                <!-- <router-link to="/leaderboard">Leaderboard</router-link> -->
               </nav>
             </header>
           </div>

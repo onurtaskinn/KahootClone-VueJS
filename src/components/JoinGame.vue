@@ -17,42 +17,6 @@
   </div>
 </template>
 
-<!-- <script>
-import axios from "axios";
-
-export default {
-  data() {
-    return {
-      alias: "",
-      gamePublicId: "",
-    };
-  },
-  methods: {
-    async submitForm() {
-      try {
-        const response = await axios.post(
-          "http://localhost:8001/api/participants/",
-          {
-            alias: this.alias,
-            game: this.gamePublicId,
-          }
-        );
-
-        if (response.status === 201) {
-          const uuidP = response.data.uuidP; // Access the uuidP value
-          this.$router.push({
-            name: "Waiting",
-            query: { gamePublicId: this.gamePublicId, uuidP: uuidP }, // Pass the uuidP value
-          });
-        }
-      } catch (error) {
-        console.error("Error creating participant:", error);
-      }
-    },
-  },
-};
-</script> -->
-
 <script>
 import axios from "axios";
 
@@ -67,7 +31,8 @@ export default {
     async submitForm() {
       try {
         const response = await axios.post(
-          "http://localhost:8001/api/participants/",
+          // "http://localhost:8001/api/participants/",
+          "https://my-third-assignment.onrender.com/api/participants/",
           {
             alias: this.alias,
             game: this.gamePublicId,

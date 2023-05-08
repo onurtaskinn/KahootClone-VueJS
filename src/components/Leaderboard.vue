@@ -158,7 +158,7 @@
       const fetchParticipants = async () => {
         try {
           console.log(gamePublicId)
-          const response = await axios.get(`http://localhost:8001/api/game-participants/${gamePublicId.value}/`);
+          const response = await axios.get(`https://my-third-assignment.onrender.com/api/game-participants/${gamePublicId.value}/`); //http://localhost:8001/api
           participants.value = response.data.sort((a, b) => b.points - a.points);
           maxPoints.value = participants.value[0]?.points || 0; // Set maxPoints to the points of the first participant or 0 if no participants
         } catch (error) {

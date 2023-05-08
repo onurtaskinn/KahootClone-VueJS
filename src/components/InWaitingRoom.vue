@@ -47,7 +47,7 @@
   
       const fetchParticipants = async () => {
         try {
-          const response = await axios.get(`http://localhost:8001/api/game-participants/${gamePublicId.value}/`);
+          const response = await axios.get(`https://my-third-assignment.onrender.com/api/game-participants/${gamePublicId.value}/`); //`http://localhost:8001/api/game-participants/${gamePublicId.value}/`
           participants.value = response.data;
         } catch (error) {
           console.error("Error fetching participants:", error);
