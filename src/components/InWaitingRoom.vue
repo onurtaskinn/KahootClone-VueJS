@@ -3,7 +3,13 @@
       <audio ref="correctAnswerAudio" src="/static/Correct-answer.mp3" preload="auto"></audio>
       <div class="waiting-container">
         <div v-if="previousQuestion && previousAnswer" class="previous-container">
+          <div class="current-score-container">
+            <h2 class="section-title">Your Current Score</h2>
+            <div class="current-score">
+              <p>{{ currentScore }}</p>
+            </div>
           <h2 class="section-title">Previous Question</h2>
+          </div>
           <div class="previous-question">
             <p>{{ previousQuestion }}</p>
           </div>
@@ -42,6 +48,8 @@
       const guessedAnswer = ref(sessionStorage.getItem("guessedAnswer"));
 
       const correctAnswerAudio = ref(null);
+      const currentScore = ref(0);
+
 
       
       console.log("last question : xx",last_question.value)
@@ -62,6 +70,13 @@
         try {
           const response = await axios.get(`${djangoUrl}/api/game-participants/${gamePublicId.value}/`); 
           participants.value = response.data;
+          const currentParticipant = participants.value.find(participant => participant.uuidP === uuidp.value);
+          console.log("outside")
+          if (currentParticipant) {
+            console.log("inside")
+             currentScore.value = currentParticipant.points;
+          }
+
         } catch (error) {
           console.error("Error fetching participants:", error);
         }
@@ -112,6 +127,7 @@
         previousAnswer,
         guessedAnswer,
         correct,
+        currentScore,
       };
     },
   };
@@ -169,5 +185,10 @@
 
 .guessed-answer {
   color: #f44336;
+}
+
+.current-score{
+  text-align: center;
+  color: black;
 }
 </style>

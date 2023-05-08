@@ -4,10 +4,9 @@
         <div :class="containerClass">
           <div v-if="showHeader" class="header">
             <header class="fixed-title">
-              <h1 class="title">KahootClone</h1>
-              <!-- <nav class="nav-links">
-                <router-link to="/join">Join Quiz</router-link>
-              </nav> -->
+              <nav class="nav-links">
+                <router-link to="/">KahootClone</router-link>
+              </nav>
             </header>
           </div>
           <div class="app">
@@ -25,7 +24,7 @@
 
 
   const route = useRoute();
-  const showHeader = computed(() => route.path === '/' );
+  const showHeader = computed(() => route.path === '/' || route.path === '/join' || route.path === '/leaderboard' || route.path === '/waiting');
   const containerClass = computed(() => (showHeader.value ? 'container' : 'container-no-header'));
   </script>
   
