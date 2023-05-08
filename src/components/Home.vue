@@ -2,7 +2,10 @@
   <div class="home-container">
     <div class="content-box">
       <h2>Welcome to KahootClone!</h2>
-      <p>Select an option from the menu above to get started.</p>
+      <!-- <p>Select an option from the menu above to get started.</p> -->
+      <nav class="nav-links">
+                <router-link to="/join">Join Quiz</router-link>
+      </nav>
     </div>
   </div>
 </template>
@@ -37,7 +40,30 @@ export default {
 
 .content-box h2 {
   font-size: 2rem;
-  font-weight: bold;
+  font-weight:bold;
   margin-bottom: 1.5rem;
 }
+
+nav {
+    display: flex;
+    justify-content: center;
+  }
+  
+  nav a {
+    margin-right: 10px;
+    padding: 5px 10px;
+    color: white;
+    text-decoration: none;
+    background-color: #3571d8;
+    border-radius: 5px;
+    font-weight: 600;
+    transition: background-color 0.3s;
+    font-size: larger;
+  }
+  
+  nav a:hover {
+    background-color: #1c5ed2;
+  }
+  
+
 </style>

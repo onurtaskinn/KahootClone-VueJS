@@ -1,7 +1,9 @@
 <template>
-  <div class="countdown-container">
-    <h2>Get ready to answer the question!</h2>
-    <p><span class="counter">{{ counter }}</span></p>
+  <div class="main-container">
+    <div class="countdown-container">
+      <h2>Get ready to answer the question!</h2>
+      <p><span class="counter">{{ counter }}</span></p>
+    </div>
   </div>
 </template>
 
@@ -45,50 +47,14 @@ export default {
 </script>
 
 
-<!-- <script>
-import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
-
-export default {
-  setup() {
-    const router = useRouter();
-    const uuidp = ref(sessionStorage.getItem("uuidP"));
-    const gamePublicId = ref(sessionStorage.getItem("gamePublicId"));
-
-    console.log("Participant uuidP in countdown:", uuidp.value);
-    console.log("publicId:", gamePublicId.value);
-
-    const counter = ref(5);
-
-    const startCountdown = () => {
-      const timer = setInterval(() => {
-        if (counter.value <= 1) {
-          clearInterval(timer);
-          router.push({
-            name: "AnswerQuestion",
-            query: {
-              uuidP: uuidp.value,
-              gamePublicId: gamePublicId.value,
-            },
-          });
-        } else {
-          counter.value--;
-        }
-      }, 1000);
-    };
-
-    onMounted(() => {
-      startCountdown();
-    });
-
-    return {
-      counter,
-    };
-  },
-};
-</script> -->
-
 <style scoped>
+
+.main-container {
+  /* justify-content: center; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .countdown-container {
   display: flex;
   flex-direction: column;
@@ -104,6 +70,8 @@ export default {
 h2 {
   margin-bottom: 1.5rem;
   color: #3571d8;
+  font-weight:400 ;
+  font-family:fantasy;
 }
 
 p {

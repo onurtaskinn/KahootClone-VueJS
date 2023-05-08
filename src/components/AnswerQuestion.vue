@@ -234,17 +234,6 @@ export default {
     const selectedAnswer = ref(null);
     const countdown = ref(null);
 
-    const onCountdownFinished = () => {
-      if (gameData.value.total_questions !== gameData.value.questionNo) {
-        router.push({ name: "InWaitingRoom" });
-      } else {
-        sessionStorage.setItem("gamePublicId", gamePublicId.value);
-        sessionStorage.setItem("uuidP", uuidp.value);
-        router.push({ name: "Leaderboard" });
-      }
-    };
-
-
     const startCountdown = () => {
       countdown.value = gameData.value.current_question.answerTime;
       console.log("in start countdown:", gameData.value.current_question.answerTime);
@@ -260,7 +249,7 @@ export default {
               `https://my-third-assignment.onrender.com/api/games/${gamePublicId.value}/`
             );
             if (response.data.state !== "ANSWER") {
-              onCountdownFinished();
+              router.push({ name: "InWaitingRoom" });
             } else {
               setTimeout(checkGameState, 1000); // Check again after 1 second
             }

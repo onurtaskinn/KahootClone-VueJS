@@ -5,9 +5,9 @@
           <div v-if="showHeader" class="header">
             <header class="fixed-title">
               <h1 class="title">KahootClone</h1>
-              <nav class="nav-links">
+              <!-- <nav class="nav-links">
                 <router-link to="/join">Join Quiz</router-link>
-              </nav>
+              </nav> -->
             </header>
           </div>
           <div class="app">
@@ -86,6 +86,7 @@
     border-radius: 5px;
     font-weight: 600;
     transition: background-color 0.3s;
+    font-size: larger;
   }
   
   nav a:hover {
